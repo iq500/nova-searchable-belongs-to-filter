@@ -1,19 +1,19 @@
 @import "~vue-select/dist/vue-select.css";
 
-.multiselect-filter {
+.searchable-belongs-to-filter {
   background-color: #fff;
 }
 
-.multiselect-filter .vs__selected {
+.searchable-belongs-to-filter .vs__selected {
   background-color: #4099de;
   color: #fff;
 }
 
-.multiselect-filter .vs__deselect > svg {
+.searchable-belongs-to-filter .vs__deselect > svg {
   fill: #fff;
 }
 
-.multiselect-filter.v-select--not-empty .vs__clear {
+.searchable-belongs-to-filter.v-select--not-empty .vs__clear {
   display: block !important;
 }
 

@@ -18,9 +18,11 @@ class NovaSearchableBelongsToFilter extends Filter
 
     public function __construct($name = '', $fieldAttribute = '', $filterBy = '')
     {
-       $this->name = $name;
-       $this->fieldAttribute = $fieldAttribute;
-       $this->filterBy = $filterBy;
+        $this->name = $name;
+        $this->filterBy = $filterBy;
+        $this->withMeta([
+            'fieldAttribute' => $fieldAttribute,
+        ]);
     }
 
     /**
