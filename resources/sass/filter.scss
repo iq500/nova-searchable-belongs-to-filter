@@ -13,8 +13,16 @@
   fill: #fff;
 }
 
-.searchable-belongs-to-filter.v-select--not-empty .vs__clear {
-  display: block !important;
+.searchable-belongs-to-filter.vs--not-empty:not(.vs--open):not(.vs--loading) {
+  .vs__search {
+    display: none;
+  }
+}
+
+.searchable-belongs-to-filter.vs--not-empty.vs--open {
+  .vs__selected {
+    display: none;
+  }
 }
 
 .vs__dropdown-menu {

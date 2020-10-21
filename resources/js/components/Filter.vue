@@ -14,6 +14,9 @@
           track-by="value"
           class="searchable-belongs-to-filter"
           @input="handleChange"
+          :class="{
+              'vs--not-empty': value,
+          }"
           @reset="clearSelection"
           @search="fetchOptions"
       >
