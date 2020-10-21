@@ -1,118 +1,115 @@
 <template>
-    <div>
-        <h3 class="text-sm uppercase tracking-wide text-80 bg-30 p-3">
-            {{ filter.name }}
-        </h3>
-
-        <div class="p-2">
-            <search-input
-                @input="performSearch"
-                @clear="clearSelection"
-                @selected="handleChange"
-                :value="value"
-                :data="availableResources"
-                :clearable="false"
-                trackBy="value"
-                searchBy="display"
-            >
-                <div
-                    slot="default"
-                    v-if="value"
-                    class="flex items-center"
-                >
-                    <div
-                        v-if="value.avatar"
-                        class="mr-3"
-                    >
-                        <img
-                            :src="value.avatar"
-                            class="w-8 h-8 rounded-full block"
-                        />
-                    </div>
-
-                    {{ value.display }}
-                </div>
-
-                <div
-                    slot="option"
-                    slot-scope="{ option, selected }"
-                    class="flex items-center"
-                >
-                    <div
-                        v-if="option.avatar"
-                        class="mr-3"
-                    >
-                        <img
-                            :src="option.avatar"
-                            class="w-8 h-8 rounded-full block"
-                        />
-                    </div>
-
-                    {{ option.display }}
-                </div>
-            </search-input>
-
-        </div>
+  <div>
+    <h3 class="text-sm uppercase tracking-wide text-80 bg-30 p-3">
+      {{ filter.name }}
+    </h3>
+    <div class="p-2">
+      <v-select
+          appendToBody
+          :value="value"
+          :options="availableResources"
+          :placeholder="placeholder"
+          :loading="loading"
+          label="display"
+          track-by="value"
+          class="searchable-belongs-to-filter"
+          @input="handleChange"
+          @reset="clearSelection"
+          @search="fetchOptions"
+      >
+        <div slot="no-options">{{noOptionsLabel}}</div>
+      </v-select>
     </div>
+  </div>
 </template>
 
 <script>
 import { PerformsSearches } from "laravel-nova"
+import vSelect from 'vue-select'
 import storage from '../storage/BelongsToFieldStorage'
 
 export default {
-    mixins: [PerformsSearches],
+  mixins: [PerformsSearches],
+  components: { vSelect },
 
-    props: {
-        resourceName: {
-            type: String,
-            required: true,
-        },
-        filterKey: {
-            type: String,
-            required: true,
-        },
+  props: {
+    resourceName: {
+      type: String,
+      required: true,
+    },
+    filterKey: {
+      type: String,
+      required: true,
+    },
+  },
+
+  data: () => ({
+    loading: false
+  }),
+
+  methods: {
+    getAvailableResources() {
+      if (this.search.length >= this.searchFromLength) {
+        return storage.fetchAvailableResources(
+            this.resourceName,
+            this.fieldAttribute,
+            {
+              params: {
+                search: this.search,
+              },
+            }
+        ).then(({data: {resources}}) => {
+          this.availableResources = resources;
+        }).finally(() => {
+          this.loading = false;
+        });
+      }
     },
 
-    methods: {
-        getAvailableResources() {
-            return storage.fetchAvailableResources(
-                this.resourceName,
-                this.fieldAttribute,
-                {
-                    params: {
-                        search: this.search,
-                    },
-                }
-            ).then(({ data: { resources } }) => {
-                this.availableResources = resources;
-            });
-        },
+    handleChange(resource) {
+      this.$store.commit(`${this.resourceName}/updateFilterState`, {
+        filterClass: this.filterKey,
+        value: resource
+      });
 
-        handleChange(resource) {
-            this.$store.commit(`${this.resourceName}/updateFilterState`, {
-                filterClass: this.filterKey,
-                value: resource
-            });
-
-            this.$emit("change");
-        },
+      this.$emit("change");
     },
 
-    computed: {
-        filter() {
-            return this.$store.getters[`${this.resourceName}/getFilter`](
-                this.filterKey
-            );
-        },
+    fetchOptions(search, loading) {
+      this.loading = search.length >= this.searchFromLength;
+      this.performSearch(search);
+    }
+  },
 
-        fieldAttribute() {
-            return this.filter.fieldAttribute;
-        },
-
-        value() {
-            return this.filter.currentValue;
-        },
+  computed: {
+    filter() {
+      return this.$store.getters[`${this.resourceName}/getFilter`](
+          this.filterKey
+      );
     },
+
+    fieldAttribute() {
+      return this.filter.fieldAttribute;
+    },
+
+    value() {
+      return this.filter.currentValue;
+    },
+
+    noOptionsLabel: function () {
+      if (this.search.length < this.searchFromLength) {
+        return this.filter.emptySearchLabel || this.__('Enter at least :attribute letters to start search.', { "attribute": this.searchFromLength.toString() });
+      }
+      return this.filter.noOptionsLabel || this.__('Sorry, no matching options.');
+    },
+
+    placeholder: function () {
+      return this.filter.placeholder || this.__('Select option');
+    },
+
+    searchFromLength() {
+      return this.filter.searchFromLength || 2;
+    },
+  },
 };
 </script>

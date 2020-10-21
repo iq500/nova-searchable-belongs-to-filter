@@ -1,6 +1,6 @@
 <?php
 
-namespace Suenerds\NovaSearchableBelongsToFilter;
+namespace Iq500\NovaSearchableBelongsToFilter;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
@@ -16,9 +16,11 @@ class NovaSearchableBelongsToFilter extends Filter
 
     public $filterBy;
 
-    public function __construct($name = '')
+    public function __construct($name = '', $fieldAttribute = '', $filterBy = '')
     {
        $this->name = $name;
+       $this->fieldAttribute = $fieldAttribute;
+       $this->filterBy = $filterBy;
     }
 
     /**

@@ -1,1 +1,30 @@
-// Nova Filter CSS
+@import "~vue-select/dist/vue-select.css";
+
+.multiselect-filter {
+  background-color: #fff;
+}
+
+.multiselect-filter .vs__selected {
+  background-color: #4099de;
+  color: #fff;
+}
+
+.multiselect-filter .vs__deselect > svg {
+  fill: #fff;
+}
+
+.multiselect-filter.v-select--not-empty .vs__clear {
+  display: block !important;
+}
+
+.vs__dropdown-menu {
+  width: min-content !important;
+}
+
+.vs__dropdown-menu .vs__dropdown-option--highlight {
+  background: #4099de;
+}
+
+.vs__dropdown-menu .vs__dropdown-option--selected {
+  display: none;
+}

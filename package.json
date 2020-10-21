@@ -15,6 +15,7 @@
     },
     "dependencies": {
         "laravel-nova": "^1.0.9",
-        "vue": "^2.5.0"
+        "vue": "^2.5.0",
+        "vue-select": "^3.10.8"
     }
 }
