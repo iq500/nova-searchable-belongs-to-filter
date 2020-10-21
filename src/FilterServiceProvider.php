@@ -5,6 +5,7 @@ namespace Iq500\NovaSearchableBelongsToFilter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Nova;
+use Illuminate\Support\Facades\App;
 
 class FilterServiceProvider extends ServiceProvider
 {
